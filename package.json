@@ -1,0 +1,50 @@
+{
+  "name": "lazy-builder",
+  "description": "Utility for lazily rebuilding an immutable map of files",
+  "version": "0.0.0",
+  "babel": {
+    "presets": [
+      "es2015-node5"
+    ]
+  },
+  "dependencies": {
+    "bluebird": "^3.1.1",
+    "immutable": "^3.7.6",
+    "lodash": "^3.10.1",
+    "pair-table": "^1.0.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-eslint": "^5.0.0-beta6",
+    "babel-preset-es2015-node5": "^1.1.1",
+    "eslint": "^1.10.3",
+    "eslint-config-trip": "^1.0.1",
+    "eslint-plugin-babel": "^3.0.0",
+    "mkdirp": "^0.5.1",
+    "mocha": "^2.3.4",
+    "sinon": "^1.17.2",
+    "source-map-support": "^0.4.0"
+  },
+  "engines": {
+    "node": ">=5",
+    "npm": ">=3"
+  },
+  "eslintConfig": {
+    "extends": "trip"
+  },
+  "files": [
+    "dist/lib",
+    "src/lib"
+  ],
+  "jsnext:main": "src/lib/LazyBuilder.js",
+  "license": "BSD-3-Clause",
+  "main": "dist/lib/LazyBuilder.js",
+  "repository": "tripjs/lazy-builder",
+  "scripts": {
+    "build": "rimraf dist && babel src --out-dir dist --source-maps",
+    "buildwatch": "rimraf dist && babel src --out-dir dist --watch --source-maps",
+    "prepublish": "eslint . && npm run build",
+    "test": "mocha dist/test",
+    "testwatch": "cd dist && mocha --watch"
+  }
+}
