@@ -1,9 +1,9 @@
-import Immutable from 'immutable';
-import Promise, {coroutine} from 'bluebird';
-import PairTable from 'pair-table';
-import {isString, isPlainObject} from 'lodash';
-import path from 'path';
 import getChanges from './getChanges';
+import Immutable from 'immutable';
+import PairTable from 'pair-table';
+import path from 'path';
+import Promise, {coroutine} from 'bluebird';
+import {isString, isPlainObject} from 'lodash';
 
 const privates = new WeakMap();
 
