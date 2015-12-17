@@ -1,8 +1,10 @@
 /* global describe, it */
 
-import LazyBuilder from '../lib/LazyBuilder';
-import Immutable from 'immutable';
 import assert from 'assert';
+import Immutable from 'immutable';
+import LazyBuilder from '../lib/LazyBuilder';
+import prettyHRTime from 'pretty-hrtime';
+import Promise from 'bluebird';
 
 function simplify(map) {
   return map.map(buffer => buffer.toString()).toObject();
@@ -180,4 +182,49 @@ describe('LazyBuilder', () => {
       });
     });
   });
+
+  it('stress test', function () {
+    // this is just for informal observations
+
+    this.timeout(20000);
+    input = input.clear();
+
+    const buf1 = new Buffer(12).fill(0);
+    const buf2 = new Buffer(80).fill(2);
+    const buf3 = new Buffer('asdfasdfasdf');
+    const buf4 = new Buffer('fdsafds');
+    const buf5 = new Buffer('aiousdhfioasdf');
+
+    const start = process.hrtime();
+
+    Promise.mapSeries(new Array(200), (x, i) => {
+      const occasional1 = (i % 5 === 0);
+      const occasional2 = (i % 3 === 0);
+      const occasional3 = (i % 11 === 0);
+
+      input = input.merge({
+        'banner.txt': buf5,
+        [`foo${i}.bar`]: buf1,
+        [`something${occasional3 ? 'x' : ''}.js`]: occasional1 ? buf3 : buf4,
+      });
+
+      if (occasional1) input = input.set(`another.js`, buf5);
+
+      if (occasional2) {
+        input = input.merge({
+          'another.bar': buf2,
+          'whatever.random': buf1,
+        });
+      }
+
+      if (occasional3) input = input.set(`yetanother.js`, buf4);
+
+      return builder.build(input).then(() => null);
+    }).then(() => {
+      const duration = process.hrtime(start);
+
+      console.log('\nSTRESS TEST DURATION:', prettyHRTime(duration));
+    });
+  });
 });
+
