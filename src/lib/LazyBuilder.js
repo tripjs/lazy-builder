@@ -50,13 +50,6 @@ const build = coroutine(function* _build(input) {
     }
   });
 
-  // debug
-  // console.log('\n\nfiles to build');
-  // for (const [file, contents] of filesToBuild.entries()) {
-  //   console.log('  ' + file, contents ? JSON.stringify(String(contents)) : contents);
-  // }
-  // console.log('\n\n');
-
   // build everything
   const results = yield Promise.props(
     filesToBuild
@@ -204,9 +197,6 @@ const build = coroutine(function* _build(input) {
 
   // finalise the output
   const output = Immutable.Map(outputWrites);
-
-  // debugging
-  console.assert([...output.values()].every(Buffer.isBuffer), 'bug..?');
 
   // finish up and resolve with the output
   priv.importations = newImportations;
