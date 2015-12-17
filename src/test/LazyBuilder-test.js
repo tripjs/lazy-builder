@@ -12,7 +12,7 @@ describe('LazyBuilder', () => {
   // initial input
   let input = Immutable.Map({
     'foo.bar': 'misc contents',
-    'some/script.js': `console.log('hello');`,
+    'something.js': `console.log('hello');`,
     'banner.txt': 'Copyright Alphabet 1980',
   }).map(string => new Buffer(string));
 
@@ -43,11 +43,11 @@ describe('LazyBuilder', () => {
 
         assert.deepEqual(simplify(output), {
           'foo.bar': 'misc contents',
-          'some/script.js': (
+          'something.js': (
             `/* Copyright Alphabet 1980 */\n` +
             `console.log('hello');`
           ),
-          'some/script.js.uppercase': `CONSOLE.LOG('HELLO');`,
+          'something.js.uppercase': `CONSOLE.LOG('HELLO');`,
         }, 'expected output');
       })
     ;
@@ -61,11 +61,11 @@ describe('LazyBuilder', () => {
 
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
-        'some/script.js': (
+        'something.js': (
           `/* Copyright Alphabet 1980 */\n` +
           `console.log('hello');`
         ),
-        'some/script.js.uppercase': `CONSOLE.LOG('HELLO');`,
+        'something.js.uppercase': `CONSOLE.LOG('HELLO');`,
       }, 'expected output');
     });
   });
@@ -78,28 +78,28 @@ describe('LazyBuilder', () => {
 
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
-        'some/script.js': (
+        'something.js': (
           `/* Copyright Zebra 2051 */\n` +
           `console.log('hello');`
         ),
-        'some/script.js.uppercase': `CONSOLE.LOG('HELLO');`,
+        'something.js.uppercase': `CONSOLE.LOG('HELLO');`,
       }, 'expected output');
     });
   });
 
   it('modifying the JS contents', () => {
-    input = input.set('some/script.js', new Buffer(`console.log('changed!');`));
+    input = input.set('something.js', new Buffer(`console.log('changed!');`));
 
     return builder.build(input).then(_output => {
       output = _output;
 
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
-        'some/script.js': (
+        'something.js': (
           `/* Copyright Zebra 2051 */\n` +
           `console.log('changed!');`
         ),
-        'some/script.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
       }, 'expected output');
     });
   });
@@ -112,11 +112,11 @@ describe('LazyBuilder', () => {
 
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
-        'some/script.js': (
+        'something.js': (
           `/* Copyright Zebra 2051 */\n` +
           `console.log('changed!');`
         ),
-        'some/script.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
         'another.js': (
           `/* Copyright Zebra 2051 */\n` +
           `anotherScript();`
@@ -137,11 +137,11 @@ describe('LazyBuilder', () => {
 
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
-        'some/script.js': (
+        'something.js': (
           `/* Copyright Whatever 1999 */\n` +
           `console.log('changed!');`
         ),
-        'some/script.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
         'another.js': (
           `/* Copyright Whatever 1999 */\n` +
           `yup()`
@@ -159,11 +159,11 @@ describe('LazyBuilder', () => {
 
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
-        'some/script.js': (
+        'something.js': (
           `/* Copyright Whatever 1999 */\n` +
           `console.log('changed!');`
         ),
-        'some/script.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
       }, 'expected output');
     });
   });
