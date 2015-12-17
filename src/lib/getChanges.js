@@ -8,19 +8,13 @@ import Immutable from 'immutable';
 export default function getChanges(oldMap, newMap) {
   const changes = {};
 
-  for (const [file, oldContents] of oldMap.entries()) {
+  for (const file of new Set([...oldMap.keys(), ...newMap.keys()])) {
     const newContents = newMap.get(file);
 
     if (newContents) {
-      if (newContents !== oldContents) {
-        changes[file] = newContents;
-      }
+      if (newContents !== oldMap.get(file)) changes[file] = newContents;
     }
     else changes[file] = null;
-  }
-
-  for (const [file, newContents] of newMap.entries()) {
-    if (changes[file] === undefined) changes[file] = newContents;
   }
 
   return Immutable.Map(changes);
