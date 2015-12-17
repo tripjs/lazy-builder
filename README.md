@@ -2,7 +2,7 @@
 
 Utility for lazily rebuilding an immutable map of files.
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![devDependency Status][devdepstat-image]][devdepstat-url] [![peerDependency Status][peerdepstat-image]][peerdepstat-url]
+[![NPM version][npm-image]][npm-url] [![Linux Build Status][travis-image]][travis-url] [![Windows Build Status][appveyor-image]][appveyor-url] [![Dependency Status][depstat-image]][depstat-url] [![devDependency Status][devdepstat-image]][devdepstat-url] [![peerDependency Status][peerdepstat-image]][peerdepstat-url]
 
 ## License
 
@@ -12,8 +12,11 @@ BSD 3-Clause. See [LICENSE](./LICENSE). Copyright 2015 Callum Locke.
 [npm-url]: https://npmjs.org/package/lazy-builder
 [npm-image]: https://img.shields.io/npm/v/lazy-builder.svg?style=flat-square
 
-[travis-url]: http://travis-ci.org/tripjs/lazy-builder
-[travis-image]: https://img.shields.io/travis/tripjs/lazy-builder.svg?style=flat-square
+[travis-url]: https://travis-ci.org/tripjs/lazy-builder
+[travis-image]: https://img.shields.io/travis/tripjs/lazy-builder.svg?style=flat-square&label=Linux
+
+[appveyor-url]: https://ci.appveyor.com/project/callumlocke/lazy-builder
+[appveyor-image]: https://img.shields.io/appveyor/ci/callumlocke/lazy-builder/master.svg?style=flat-square&label=Windows
 
 [depstat-url]: https://david-dm.org/tripjs/lazy-builder
 [depstat-image]: https://img.shields.io/david/tripjs/lazy-builder.svg?style=flat-square
