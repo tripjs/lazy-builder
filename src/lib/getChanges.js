@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
 
 /**
- * Takes an old map and a new map, and returns a final map of changes. This
- * includes nulls for those files that have been removed.
+ * Takes an old map and a new map, and returns a map of changes needed to get
+ * from the old to the new. This may include nulls for deletions.
  */
 
 export default function getChanges(oldMap, newMap) {
@@ -11,10 +11,8 @@ export default function getChanges(oldMap, newMap) {
   for (const file of new Set([...oldMap.keys(), ...newMap.keys()])) {
     const newContents = newMap.get(file);
 
-    if (newContents) {
-      if (newContents !== oldMap.get(file)) changes[file] = newContents;
-    }
-    else changes[file] = null;
+    if (!newContents) changes[file] = null;
+    else if (newContents !== oldMap.get(file)) changes[file] = newContents;
   }
 
   return Immutable.Map(changes);

@@ -1,6 +1,6 @@
 {
   "name": "lazy-builder",
-  "description": "Utility for lazily rebuilding an immutable map of files",
+  "description": "Repeatedly and lazily rebuild an immutable map of files",
   "version": "0.0.0",
   "babel": {
     "presets": [

@@ -189,7 +189,7 @@ describe('LazyBuilder', () => {
     this.timeout(20000);
     input = input.clear();
 
-    const buf1 = new Buffer(12).fill(0);
+    const buf1 = new Buffer(1024).fill(1);
     const buf2 = new Buffer(80).fill(2);
     const buf3 = new Buffer('asdfasdfasdf');
     const buf4 = new Buffer('fdsafds');
