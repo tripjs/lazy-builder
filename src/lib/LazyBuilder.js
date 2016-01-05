@@ -1,13 +1,13 @@
+import _ from 'lodash';
 import getChanges from './getChanges';
 import Immutable from 'immutable';
 import PairTable from 'pair-table';
 import path from 'path';
-import Promise, {coroutine} from 'bluebird';
-import {isString, isPlainObject} from 'lodash';
+import Promise from 'bluebird';
 
 const privates = new WeakMap();
 
-const build = coroutine(function* _build(input) {
+const build = Promise.coroutine(function* _build(input) {
   const priv = privates.get(this);
 
   // prohibit calling twice in parallel
@@ -56,10 +56,10 @@ const build = coroutine(function* _build(input) {
       filesToBuild
         .filter(contents => contents)
         .map((contents, buildPath) => {
-          // make a context for the fn, to enable this.importFile()
+          // make a simple context for the fn, providing `this.importFile()`
           const context = {
             importFile: importee => {
-              console.assert(!path.isAbsolute(importee));
+              console.assert(!path.isAbsolute(importee), 'importFile should not be used for absolute paths');
 
               newImportations.add(buildPath, importee);
 
@@ -89,13 +89,13 @@ const build = coroutine(function* _build(input) {
       {
         // if it's a single buffer/string, this is an instruction
         // to output to the exact same path
-        if (Buffer.isBuffer(result) || isString(result)) {
+        if (Buffer.isBuffer(result) || _.isString(result)) {
           const newContents = result;
           result = {[buildPath]: newContents};
         }
 
         // otherwise it's got to be a POJO
-        else if (!isPlainObject(result)) {
+        else if (!_.isPlainObject(result)) {
           throw new TypeError(
             `LazyBuilder callback's return value is of invalid type ` +
             `(${typeof result}) when building "${buildPath}"`
@@ -130,7 +130,7 @@ const build = coroutine(function* _build(input) {
 
         // make sure it's a buffer
         let contents = result[outputPath];
-        if (isString(contents)) contents = new Buffer(contents);
+        if (_.isString(contents)) contents = new Buffer(contents);
         else if (!Buffer.isBuffer(contents)) {
           throw new TypeError(
             `LazyBuilder: Expected value for output file "${outputPath}" ` +
@@ -216,7 +216,7 @@ const build = coroutine(function* _build(input) {
 
 export default class LazyBuilder {
   constructor(fn) {
-    if (fn.constructor.name === 'GeneratorFunction') fn = coroutine(fn);
+    if (fn.constructor.name === 'GeneratorFunction') fn = Promise.coroutine(fn);
 
     privates.set(this, {
       fn,

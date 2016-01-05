@@ -6,10 +6,6 @@ import LazyBuilder from '../lib/LazyBuilder';
 import prettyHRTime from 'pretty-hrtime';
 import Promise from 'bluebird';
 
-function simplify(map) {
-  return map.map(buffer => buffer.toString()).toObject();
-}
-
 describe('LazyBuilder', () => {
   // initial input
   let input = Immutable.Map({
@@ -228,3 +224,6 @@ describe('LazyBuilder', () => {
   });
 });
 
+function simplify(map) {
+  return map.map(buffer => buffer.toString()).toObject();
+}

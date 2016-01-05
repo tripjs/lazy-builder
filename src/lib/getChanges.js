@@ -1,9 +1,9 @@
-import Immutable from 'immutable';
-
 /**
  * Takes an old map and a new map, and returns a map of changes needed to get
  * from the old to the new. This may include nulls for deletions.
  */
+
+import {Immutable} from '@trip/util';
 
 export default function getChanges(oldMap, newMap) {
   const changes = {};
