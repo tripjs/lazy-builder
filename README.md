@@ -6,7 +6,7 @@ Utility for lazily rebuilding an immutable map of files.
 
 ## License
 
-BSD 3-Clause. See [LICENSE](./LICENSE). Copyright 2015 Callum Locke.
+[MIT](./LICENSE) © [Callum Locke](http://callumlocke.com/)
 
 <!-- badge URLs -->
 [npm-url]: https://npmjs.org/package/lazy-builder

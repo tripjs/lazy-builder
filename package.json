@@ -39,7 +39,7 @@
     "src/lib"
   ],
   "jsnext:main": "src/lib/LazyBuilder.js",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "main": "dist/lib/LazyBuilder.js",
   "repository": "tripjs/lazy-builder",
   "scripts": {
