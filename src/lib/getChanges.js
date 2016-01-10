@@ -3,7 +3,7 @@
  * from the old to the new. This may include nulls for deletions.
  */
 
-import {Immutable} from '@trip/util';
+import Immutable from 'immutable';
 
 export default function getChanges(oldMap, newMap) {
   const changes = {};
