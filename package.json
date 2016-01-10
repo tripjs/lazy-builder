@@ -11,10 +11,10 @@
     "bluebird": "^3.1.1",
     "immutable": "^3.7.6",
     "lodash": "^3.10.1",
-    "pair-table": "^1.0.3"
+    "pair-table": "^1.1.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.3.17",
+    "babel-cli": "^6.4.0",
     "babel-eslint": "^5.0.0-beta6",
     "babel-preset-es2015-node4": "^2.0.2",
     "eslint": "^1.10.3",
@@ -23,7 +23,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.4",
     "pretty-hrtime": "^1.0.1",
-    "rimraf": "^2.4.4",
+    "rimraf": "^2.5.0",
     "sinon": "^1.17.2",
     "source-map-support": "^0.4.0"
   },
