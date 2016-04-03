@@ -143,7 +143,6 @@ const build = Promise.coroutine(function* _build(input) {
           throw new Error(`LazyBuilder: Expected a relative path, got: ${outputPath}`);
         }
         outputPath = path.normalize(outputPath);
-        console.assert(outputPath.charAt(0) !== '.', 'should not start with a dot: ' + outputPath);
 
         // add it to the output
         outputWrites[outputPath] = contents;
