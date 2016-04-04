@@ -45,8 +45,7 @@
     }
   },
   "files": [
-    "dist/lib",
-    "src/lib"
+    "dist/lib"
   ],
   "jsnext:main": "src/lib/LazyBuilder.js",
   "license": "MIT",
