@@ -11,7 +11,9 @@ const build = Promise.coroutine(function* _build(input) {
   const priv = privates.get(this);
 
   // prohibit calling twice in parallel
-  if (priv.building) throw new Error('You must wait for previous build() to finish before calling build() again.');
+  if (priv.building) {
+    throw new Error('You must wait for previous build() to finish before calling build() again.');
+  }
   priv.building = true;
 
   try {
@@ -59,7 +61,10 @@ const build = Promise.coroutine(function* _build(input) {
           // make a simple context for the fn, providing `this.importFile()`
           const context = {
             importFile: importee => {
-              console.assert(!path.isAbsolute(importee), 'importFile should not be used for absolute paths');
+              // console.assert(
+              //   !path.isAbsolute(importee),
+              //   'importFile should not be used for absolute paths'
+              // );
 
               newImportations.add(buildPath, importee);
 
@@ -91,13 +96,10 @@ const build = Promise.coroutine(function* _build(input) {
         // to output to the exact same path
         if (Buffer.isBuffer(result) || _.isString(result)) {
           const newContents = result;
-          result = {[buildPath]: newContents};
-        }
-
-        // otherwise it's got to be a POJO
-        else if (!_.isPlainObject(result)) {
+          result = { [buildPath]: newContents };
+        } else if (!_.isPlainObject(result)) {
           throw new TypeError(
-            `LazyBuilder callback's return value is of invalid type ` +
+            'LazyBuilder callback\'s return value is of invalid type ' +
             `(${typeof result}) when building "${buildPath}"`
           );
         }
@@ -187,7 +189,7 @@ const build = Promise.coroutine(function* _build(input) {
     // wasn't output this time and isn't in toDelete
     if (priv.output) {
       priv.output.forEach((contents, file) => {
-        console.assert(Buffer.isBuffer(contents));
+        // console.assert(Buffer.isBuffer(contents));
 
         if (!outputWrites[file] && !toDelete.has(file)) {
           outputWrites[file] = contents;
@@ -206,16 +208,17 @@ const build = Promise.coroutine(function* _build(input) {
     priv.building = false;
 
     return Immutable.Map(output);
-  }
-  catch (error) {
+  } catch (error) {
     priv.building = false;
     throw error;
   }
 });
 
 export default class LazyBuilder {
-  constructor(fn) {
-    if (fn.constructor.name === 'GeneratorFunction') fn = Promise.coroutine(fn);
+  constructor(_fn) {
+    const fn = _fn.constructor.name === 'GeneratorFunction'
+      ? Promise.coroutine(_fn)
+      : _fn;
 
     privates.set(this, {
       fn,

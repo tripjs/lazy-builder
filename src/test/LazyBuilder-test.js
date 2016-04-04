@@ -1,4 +1,5 @@
 /* global describe, it */
+/* eslint-disable no-console */
 
 import assert from 'assert';
 import Immutable from 'immutable';
@@ -6,18 +7,22 @@ import LazyBuilder from '../lib/LazyBuilder';
 import prettyHRTime from 'pretty-hrtime';
 import Promise from 'bluebird';
 
+function simplify(map) {
+  return map.map(buffer => buffer.toString()).toObject();
+}
+
 describe('LazyBuilder', () => {
   // initial input
   let input = Immutable.Map({
     'foo.bar': 'misc contents',
-    'something.js': `console.log('hello');`,
+    'something.js': 'console.log("hello");',
     'banner.txt': 'Copyright Alphabet 1980',
   }).map(string => new Buffer(string));
 
   let output;
 
   // builder
-  const builder = new LazyBuilder(function (file, contents) {
+  const builder = new LazyBuilder(function addBanner(file, contents) {
     if (file === 'banner.txt') return null;
 
     if (file.endsWith('.js')) {
@@ -32,24 +37,22 @@ describe('LazyBuilder', () => {
     return contents;
   });
 
-  it('starting from scratch', () => {
-    return builder.build(input)
-      .then(_output => {
-        output = _output;
+  it('starting from scratch', () => builder.build(input)
+    .then(_output => {
+      output = _output;
 
-        assert(Immutable.Map.isMap(output), 'should be a map');
+      assert(Immutable.Map.isMap(output), 'should be a map');
 
-        assert.deepEqual(simplify(output), {
-          'foo.bar': 'misc contents',
-          'something.js': (
-            `/* Copyright Alphabet 1980 */\n` +
-            `console.log('hello');`
-          ),
-          'something.js.uppercase': `CONSOLE.LOG('HELLO');`,
-        }, 'expected output');
-      })
-    ;
-  });
+      assert.deepEqual(simplify(output), {
+        'foo.bar': 'misc contents',
+        'something.js': (
+          '/* Copyright Alphabet 1980 */\n' +
+          'console.log("hello");'
+        ),
+        'something.js.uppercase': 'CONSOLE.LOG("HELLO");',
+      }, 'expected output');
+    })
+  );
 
   it('modifying a misc file', () => {
     input = input.set('foo.bar', new Buffer('updated misc contents!'));
@@ -60,10 +63,10 @@ describe('LazyBuilder', () => {
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
         'something.js': (
-          `/* Copyright Alphabet 1980 */\n` +
-          `console.log('hello');`
+          '/* Copyright Alphabet 1980 */\n' +
+          'console.log("hello");'
         ),
-        'something.js.uppercase': `CONSOLE.LOG('HELLO');`,
+        'something.js.uppercase': 'CONSOLE.LOG("HELLO");',
       }, 'expected output');
     });
   });
@@ -77,16 +80,16 @@ describe('LazyBuilder', () => {
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
         'something.js': (
-          `/* Copyright Zebra 2051 */\n` +
-          `console.log('hello');`
+          '/* Copyright Zebra 2051 */\n' +
+          'console.log("hello");'
         ),
-        'something.js.uppercase': `CONSOLE.LOG('HELLO');`,
+        'something.js.uppercase': 'CONSOLE.LOG("HELLO");',
       }, 'expected output');
     });
   });
 
   it('modifying the JS contents', () => {
-    input = input.set('something.js', new Buffer(`console.log('changed!');`));
+    input = input.set('something.js', new Buffer('console.log("changed!");'));
 
     return builder.build(input).then(_output => {
       output = _output;
@@ -95,15 +98,15 @@ describe('LazyBuilder', () => {
         'foo.bar': 'updated misc contents!',
         'something.js': (
           `/* Copyright Zebra 2051 */\n` +
-          `console.log('changed!');`
+          'console.log("changed!");'
         ),
-        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': 'CONSOLE.LOG("CHANGED!");',
       }, 'expected output');
     });
   });
 
   it('adding more files', () => {
-    input = input.set('another.js', new Buffer(`anotherScript();`));
+    input = input.set('another.js', new Buffer('anotherScript();'));
 
     return builder.build(input).then(_output => {
       output = _output;
@@ -111,15 +114,15 @@ describe('LazyBuilder', () => {
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
         'something.js': (
-          `/* Copyright Zebra 2051 */\n` +
-          `console.log('changed!');`
+          '/* Copyright Zebra 2051 */\n' +
+          'console.log("changed!");'
         ),
-        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': 'CONSOLE.LOG("CHANGED!");',
         'another.js': (
-          `/* Copyright Zebra 2051 */\n` +
-          `anotherScript();`
+          '/* Copyright Zebra 2051 */\n' +
+          'anotherScript();'
         ),
-        'another.js.uppercase': `ANOTHERSCRIPT();`,
+        'another.js.uppercase': 'ANOTHERSCRIPT();',
       }, 'expected output');
     });
   });
@@ -136,15 +139,15 @@ describe('LazyBuilder', () => {
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
         'something.js': (
-          `/* Copyright Whatever 1999 */\n` +
-          `console.log('changed!');`
+          '/* Copyright Whatever 1999 */\n' +
+          'console.log("changed!");'
         ),
-        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': 'CONSOLE.LOG("CHANGED!");',
         'another.js': (
-          `/* Copyright Whatever 1999 */\n` +
-          `yup()`
+          '/* Copyright Whatever 1999 */\n' +
+          'yup()'
         ),
-        'another.js.uppercase': `YUP()`,
+        'another.js.uppercase': 'YUP()',
       }, 'expected output');
     });
   });
@@ -158,10 +161,10 @@ describe('LazyBuilder', () => {
       assert.deepEqual(simplify(output), {
         'foo.bar': 'updated misc contents!',
         'something.js': (
-          `/* Copyright Whatever 1999 */\n` +
-          `console.log('changed!');`
+          '/* Copyright Whatever 1999 */\n' +
+          'console.log("changed!");'
         ),
-        'something.js.uppercase': `CONSOLE.LOG('CHANGED!');`,
+        'something.js.uppercase': 'CONSOLE.LOG("CHANGED!");',
       }, 'expected output');
     });
   });
@@ -179,7 +182,7 @@ describe('LazyBuilder', () => {
     });
   });
 
-  it('stress test', function () {
+  it('stress test', function stressTest() {
     // this is just for informal observations
 
     this.timeout(20000);
@@ -204,7 +207,7 @@ describe('LazyBuilder', () => {
         [`something${occasional3 ? 'x' : ''}.js`]: occasional1 ? buf3 : buf4,
       });
 
-      if (occasional1) input = input.set(`another.js`, buf5);
+      if (occasional1) input = input.set('another.js', buf5);
 
       if (occasional2) {
         input = input.merge({
@@ -213,7 +216,7 @@ describe('LazyBuilder', () => {
         });
       }
 
-      if (occasional3) input = input.set(`yetanother.js`, buf4);
+      if (occasional3) input = input.set('yetanother.js', buf4);
 
       return builder.build(input).then(() => null);
     }).then(() => {
@@ -223,7 +226,3 @@ describe('LazyBuilder', () => {
     });
   });
 });
-
-function simplify(map) {
-  return map.map(buffer => buffer.toString()).toObject();
-}
