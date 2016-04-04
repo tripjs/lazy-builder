@@ -15,7 +15,7 @@
     "bluebird": "^3.3.4",
     "immutable": "^3.7.6",
     "lodash": "^4.7.0",
-    "pair-table": "^1.1.0"
+    "pair-table": "^1.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
