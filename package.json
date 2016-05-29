@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "babel-runtime": "^6.6.1",
+    "babel-runtime": "^6.9.1",
     "bluebird": "^3.3.4",
     "immutable": "^3.7.6",
     "lodash": "^4.7.0",
