@@ -32,7 +32,7 @@
     "mocha": "^2.4.5",
     "pretty-hrtime": "^1.0.2",
     "sinon": "^1.17.3",
-    "source-map-support": "^0.4.0"
+    "source-map-support": "^0.4.6"
   },
   "engines": {
     "node": ">=0.12"
