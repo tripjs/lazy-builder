@@ -27,7 +27,7 @@
     "del-cli": "^0.2.0",
     "eslint": "^2.6.0",
     "eslint-config-airbnb": "^6.2.0",
-    "eslint-plugin-babel": "^3.1.0",
+    "eslint-plugin-babel": "^4.0.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
     "pretty-hrtime": "^1.0.2",
